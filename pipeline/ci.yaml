@@ -1,1 +1,32 @@
+trigger: none
+      
+pr:
+  - master
+  - develop
 
+pool:
+  name: "cicdpool"
+
+parameters:
+  - name: major_version
+    displayName: Major Version
+    type: number
+    default: 1
+  - name: minor_version
+    displayName: Minor Version
+    type: number
+    default: 0
+
+stages:
+  - stage: build
+    displayName: Build
+    jobs:
+      - job: build
+        displayName: Build
+        steps:          
+          - task: Bash@3
+            displayName: "Build and Push Docker Image"
+            inputs:
+              targetType: "inline"
+              script: |
+                docker build -t helloworld:latest -f $(Build.SourcesDirectory) .
